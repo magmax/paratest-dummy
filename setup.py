@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import platform
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
@@ -11,6 +12,12 @@ description = "Test paralelizer for testing (does nothing)"
 module = 'paratest-dummy.dummy'
 url = 'https://github.com/projectparatest/paratest-dummy'
 author = 'Miguel Angel Garcia'
+datapath = (
+    os.path.join(os.getenv('ProgramData'), 'paratest')
+    if platform.system().lower() == 'windows'
+    else '/usr/share/paratest'
+)
+
 
 def read_description():
     if not os.path.exists('README.rst'):
@@ -39,7 +46,7 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args or ['--cov-report=term-missing'])
         sys.exit(errno)
 
-with open('src/dummy.paratest', 'w+') as fd:
+with open('dummy.paratest', 'w+') as fd:
     content = """
 [Core]
 Name = {name}
@@ -90,11 +97,10 @@ setup(
     include_package_data=True,
     package_dir={
         '': 'src',
-#        '/opt/paratest': 'src/paratest-dummy',
     },
-    package_data={
-#        '/opt/paratest': ['src/*.paratest'],
-    },
+    data_files=[
+        (datapath, ['dummy.paratest']),
+    ],
     install_requires=[
         'yapsy == 1.11.223',
     ],
