@@ -6,17 +6,13 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
 
-version = "0.0.0"
+version = "0.0.1"
 name = 'paratest-dummy'
 description = "Test paralelizer for testing (does nothing)"
 module = 'paratest-dummy.dummy'
-url = 'https://github.com/projectparatest/paratest-dummy'
+url = 'https://github.com/paratestproject/paratest-dummy'
 author = 'Miguel Angel Garcia'
-datapath = (
-    os.path.join(os.getenv('ProgramData'), 'paratest')
-    if platform.system().lower() == 'windows'
-    else '/usr/share/paratest'
-)
+datapath = '/etc/paratest/plugins'
 
 
 def read_description():
@@ -45,6 +41,7 @@ class PyTest(TestCommand):
         import pytest
         errno = pytest.main(self.pytest_args or ['--cov-report=term-missing'])
         sys.exit(errno)
+
 
 with open('dummy.paratest', 'w+') as fd:
     content = """
@@ -77,10 +74,10 @@ setup(
     cmdclass={'test': PyTest},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
@@ -96,12 +93,13 @@ setup(
     packages=find_packages('src'),
     include_package_data=True,
     package_dir={
-        '': 'src',
+        datapath: 'src',
     },
     data_files=[
         (datapath, ['dummy.paratest']),
     ],
     install_requires=[
         'yapsy == 1.11.223',
+        'paratest'
     ],
 )
