@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
 
-version = "0.0.6"
+version = "0.0.8"
 name = 'paratest-dummy'
 description = "Test paralelizer for testing (does nothing)"
 module = 'paratest-dummy.dummy'
@@ -94,10 +94,7 @@ setup(
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
-    data_files=[
-        (datapath, ['dummy.paratest']),
-    ],
-    install_requires=[
-        'yapsy == 1.11.223',
-    ],
+    entry_points={
+        'paratest': 'find = paratest_dummy.dummy:find'
+    }
 )
